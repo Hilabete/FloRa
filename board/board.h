@@ -122,10 +122,10 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define RADIO_DIO_5                                 PA_1	//PB_4
 
 #ifdef FLORA_BOARD
-	#define RADIO_ANT_SWITCH                         		PA_4 //PE4259 selector
+	#define RADIO_ANT_SWITCH                         	PA_4 //PE4259 selector
 #else
-	#define RADIO_ANT_SWITCH_RX                         PC_13
-	#define RADIO_ANT_SWITCH_TX                         PA_4
+	#define RADIO_ANT_SWITCH_RX                       PC_13
+	#define RADIO_ANT_SWITCH_TX                       PA_4
 #endif
 
 #define OSC_LSE_IN                                  PC_14

@@ -1533,6 +1533,7 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
  */
 static void OnRadioTxTimeout( void )
 {
+		printf("ERROR : OnRadioTxTimeout\n");
     Radio.Sleep( );
     
     LoRaMacEventFlags.Bits.Tx = 1;
@@ -1677,6 +1678,7 @@ static void OnMacStateCheckTimerEvent( void )
             }
             else
             {
+								printf("OnMacStateCheckTimerEvent : Timer event ask for a retransmission ! \n");
                 LoRaMacEventFlags.Bits.Tx = 0;
                 // Sends the same frame again
                 if( LoRaMacSetNextChannel( ) == 0 )

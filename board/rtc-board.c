@@ -421,13 +421,11 @@ void RtcRecoverMcuStatus( void )
     
             /* After wake-up from STOP reconfigure the system clock */
             /* Enable HSE */
-            RCC_HSEConfig( RCC_HSE_ON );
+						RCC_HSEConfig( RCC_HSE_ON | RCC_HSE_Bypass); // Fluxon : mise en mode bypass
             
-						printf("RTC_BOARD : Wait till HSE is ready\n");
             /* Wait till HSE is ready */
             while( RCC_GetFlagStatus( RCC_FLAG_HSERDY ) == RESET )
             {}
-						printf("RTC_BOARD : HSE is ready\n");
             
             /* Enable PLL */
             RCC_PLLCmd( ENABLE );

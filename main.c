@@ -393,6 +393,6 @@ int main( void )
 
             trySendingFrameAgain = SendFrame( );
         }
-        TimerLowPowerHandler( );
+        //TimerLowPowerHandler( );
     }
 	}

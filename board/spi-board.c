@@ -35,15 +35,15 @@ void SpiInit( Spi_t *obj, PinNames mosi, PinNames miso, PinNames sclk, PinNames 
     GpioInit( &obj->Sclk, sclk, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_DOWN, 0 );
 
     // TODO: Make independent of stm32l1xx_gpio.h
-    GPIO_PinAFConfig( obj->Mosi.port, ( obj->Mosi.pin & 0x0F ), GPIO_AF_SPI1 );
-    GPIO_PinAFConfig( obj->Miso.port, ( obj->Miso.pin & 0x0F ), GPIO_AF_SPI1 );
-    GPIO_PinAFConfig( obj->Sclk.port, ( obj->Sclk.pin & 0x0F ), GPIO_AF_SPI1 );
+    GPIO_PinAFConfig( obj->Mosi.port, ( obj->Mosi.pin & 0x0F ), GPIO_AF_SPI2 );
+    GPIO_PinAFConfig( obj->Miso.port, ( obj->Miso.pin & 0x0F ), GPIO_AF_SPI2 );
+    GPIO_PinAFConfig( obj->Sclk.port, ( obj->Sclk.pin & 0x0F ), GPIO_AF_SPI2 );
 
     if( nss != NC )
     {
         GpioInit( &obj->Nss, nss, PIN_ALTERNATE_FCT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
         // TODO: Make independent of stm32l1xx_gpio.h
-        GPIO_PinAFConfig( obj->Nss.port, ( obj->Nss.pin & 0x0F ), GPIO_AF_SPI1 );
+        GPIO_PinAFConfig( obj->Nss.port, ( obj->Nss.pin & 0x0F ), GPIO_AF_SPI2 );
     }
     else
     {
@@ -51,8 +51,8 @@ void SpiInit( Spi_t *obj, PinNames mosi, PinNames miso, PinNames sclk, PinNames 
     }
 
     // Choose SPI interface according to the given pins
-    obj->Spi = ( SPI_TypeDef* )SPI1_BASE;
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_SPI1, ENABLE );
+    obj->Spi = ( SPI_TypeDef* )SPI2_BASE;
+    RCC_APB2PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE ); // avant modification RCC_APB2Periph_SPI1
 
     if( nss == NC )
     {

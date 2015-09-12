@@ -119,20 +119,20 @@ void SX1272AntSwInit( void )
 {
 	#ifdef FLORA_BOARD
 		// TX by default
-    GpioInit( &AntSw, RADIO_ANT_SWITCH, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
+		GpioInit( &AntSw, RADIO_ANT_SWITCH, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
 	#else
 		GpioInit( &AntTx, RADIO_ANT_SWITCH_TX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );
-    GpioInit( &AntRx, RADIO_ANT_SWITCH_RX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
+		GpioInit( &AntRx, RADIO_ANT_SWITCH_RX, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 1 );
 	#endif
 }
 
 void SX1272AntSwDeInit( void )
 {
 	#ifdef FLORA_BOARD
-    GpioInit( &AntSw, RADIO_ANT_SWITCH, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+		GpioInit( &AntSw, RADIO_ANT_SWITCH, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 	#else
-    GpioInit( &AntTx, RADIO_ANT_SWITCH_TX, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-    GpioInit( &AntRx, RADIO_ANT_SWITCH_RX, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+		GpioInit( &AntTx, RADIO_ANT_SWITCH_TX, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+		GpioInit( &AntRx, RADIO_ANT_SWITCH_RX, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 	#endif
 }
 
@@ -150,8 +150,8 @@ void SX1272SetAntSw( uint8_t rxTx )
 			#ifdef FLORA_BOARD
 				GpioWrite( &AntSw, 1 );
 			#else
-			  GpioWrite( &AntRx, 0 );
-        GpioWrite( &AntTx, 1 );
+				GpioWrite( &AntRx, 0 );
+				GpioWrite( &AntTx, 1 );
 			#endif
     }
     else
@@ -159,8 +159,8 @@ void SX1272SetAntSw( uint8_t rxTx )
 			#ifdef FLORA_BOARD
 				GpioWrite( &AntSw, 0 );
 			#else
-			  GpioWrite( &AntRx, 1 );
-        GpioWrite( &AntTx, 0 );
+				GpioWrite( &AntRx, 1 );
+				GpioWrite( &AntTx, 0 );
 			#endif
     }
 }
