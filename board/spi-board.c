@@ -52,7 +52,7 @@ void SpiInit( Spi_t *obj, PinNames mosi, PinNames miso, PinNames sclk, PinNames 
 
     // Choose SPI interface according to the given pins
     obj->Spi = ( SPI_TypeDef* )SPI2_BASE;
-    RCC_APB2PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE ); // avant modification RCC_APB2Periph_SPI1
+    RCC_APB1PeriphClockCmd( RCC_APB1Periph_SPI2, ENABLE );
 
     if( nss == NC )
     {
