@@ -78,6 +78,7 @@ void GpioMcuSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriori
 
     /* Configure EXTI line */
     EXTI_InitStructure.EXTI_Line = ( 0x01 << ( obj->pin & 0x0F ) );
+		printf("PIN : %x and EXTI line %x \n", obj->pin & 0x0F , EXTI_InitStructure.EXTI_Line);
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
 
     if( irqMode == IRQ_RISING_EDGE )

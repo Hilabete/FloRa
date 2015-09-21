@@ -31,7 +31,10 @@ Maintainer: Miguel Luis and Gregory Cristian
 //Gpio_t TxEnSx9500;
 Gpio_t Led1;
 Gpio_t Led2;
+Gpio_t testInterupt;
 //Gpio_t Led3;
+
+TestIrqHandler *testIrq[] = { onTestInterupt };
 
 //#if defined( USE_DEBUG_PINS )
 //Gpio_t DbgPin1;
@@ -81,6 +84,8 @@ void BoardInitPeriph( void )
 //    GpioInit( &TxEnSx9500, TX_EN_SX9500, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
     GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
     GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+		GpioInit( &testInterupt, TEST_INTERUPT, PIN_INPUT, PIN_PUSH_PULL, PIN_PULL_DOWN, 0 );
+		GpioSetInterrupt( &testInterupt, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, testIrq[0] );
     //GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 
     // Switch LED 1, 2, 3 OFF
@@ -195,6 +200,18 @@ uint8_t BoardMeasureBatterieLevel( void )
 {
 	uint8_t batteryLevel = 32; // Fluxon : only for test
     return batteryLevel;
+}
+
+void onTestInterupt( void )
+{
+	printf("----------------\n");
+	printf("ON_TEST_INTERUPT\n");
+	printf("----------------\n");
+	if(GpioRead( &Led2 ) == 0){
+		GpioWrite( &Led2, 1 );
+	}else{
+		GpioWrite( &Led2, 0 );
+	}	
 }
 
 //static void BoardUnusedIoInit( void )

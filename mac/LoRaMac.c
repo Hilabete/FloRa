@@ -14,6 +14,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 */
 #include <stdlib.h>
 #include <math.h>
+#include <inttypes.h>
 #include "board.h"
 #include "utilities.h"
 #include "radio.h"
@@ -177,26 +178,20 @@ const int8_t TxPowers[]    = { 20, 14, 11,  8,  5,  2 };
 static Band_t Bands[LORA_MAX_NB_BANDS] =
 {
     BAND0,
-    BAND1,
-    BAND2,
-    BAND3,
-    BAND4,
+		BAND1,
+		BAND2,
+		BAND3,
+		BAND4
 };
 
 /*!
- * LoRaMAC channels
+ * LoRaMAC channels used by Actility
  */
 static ChannelParams_t Channels[LORA_MAX_NB_CHANNELS] =
 {
     LC1,
     LC2,
-    LC3,
-    LC4,
-    LC5,
-    LC6,
-    LC7,
-    LC8,
-    LC9,
+    LC3
 };
 #else
 /*!
@@ -205,6 +200,7 @@ static ChannelParams_t Channels[LORA_MAX_NB_CHANNELS] =
 static Band_t Bands[LORA_MAX_NB_BANDS] =
 {
     BAND0,
+		BAND1
 };
 
 /*!
@@ -443,6 +439,7 @@ static void OnAckTimeoutTimerEvent( void );
  */
 static uint8_t LoRaMacSetNextChannel( void )
 {
+		printf("LoRaMac.c : LoRaMacSetNextChannel\n");
     uint8_t i = 0;
     uint8_t j = 0;
     uint8_t channelNext = Channel;
@@ -470,7 +467,16 @@ static uint8_t LoRaMacSetNextChannel( void )
             }
             if( Bands[i].TimeOff != 0 )
             {
-                minTime = MIN( Bands[i].TimeOff, minTime );
+								// il y a un dépassement de mémoire de la variable Bands[i].TimeOff !
+								int64_t test = MIN( Bands[i].TimeOff, minTime );
+                minTime = MAX( test, 0);
+								printf("------------start-------------\n");
+								printf("LoRaMac.c : LoRaMacSetNextChannel minimal time to wait for band %d is %" PRId64 "\n", i, minTime);
+								printf("LoRaMac.c : currentTime is %" PRId64 "\n", curTime);
+								printf("LoRaMac.c : LastTxDoneTime is %" PRId64 "\n", Bands[i].LastTxDoneTime);
+								printf("		LoRaMac.c : diff is %" PRId64 "\n", ( curTime - Bands[i].LastTxDoneTime ));
+								printf("LoRaMac.c : timeOff is %" PRId64 "\n", Bands[i].TimeOff);
+								printf("------------end-------------\n");
             }
         }
         else
@@ -648,7 +654,7 @@ void LoRaMacInit( LoRaMacEvent_t *events )
     LoRaMacState = MAC_IDLE;
 
 #if defined( USE_BAND_868 )
-    ChannelsMask = LC( 1 ) + LC( 2 ) + LC( 3 ) + LC( 4 ) + LC( 5 ) + LC( 6 ) + LC( 7 ) + LC( 8 ) + LC( 9 );
+    ChannelsMask = LC( 1 ) + LC( 2 ) + LC( 3 );
 #else
     ChannelsMask = LC( 1 ) + LC( 2 ) + LC( 3 );
 #endif
@@ -689,6 +695,8 @@ void LoRaMacInit( LoRaMacEvent_t *events )
 
     // Random seed initialization
     srand( RAND_SEED );
+		
+		AdrCtrlOn = ADR_CTRL;
 
     // Initialize channel index.
     Channel = LORA_MAX_NB_CHANNELS;
@@ -700,6 +708,7 @@ void LoRaMacInit( LoRaMacEvent_t *events )
 
 void LoRaMacSetAdrOn( bool enable )
 {
+		//printf("LoRaMac.c : LoRaMacSetAdrOn AdrCtrlOn\n");
     AdrCtrlOn = enable;
 }
 
@@ -958,7 +967,7 @@ uint8_t LoRaMacPrepareFrame( ChannelParams_t channel, LoRaMacHeader_t *macHdr, L
 
 uint8_t LoRaMacSendFrameOnChannel( ChannelParams_t channel )
 {
-		printf("LoRaMacSendFrameOnChannel(channel)\n");
+	printf("LoRaMacSendFrameOnChannel(channel)\n");
     LoRaMacEventInfo.Status = LORAMAC_EVENT_INFO_STATUS_ERROR;
     LoRaMacEventInfo.TxDatarate = Datarates[ChannelsDatarate];
 
@@ -1253,6 +1262,7 @@ static void OnRadioTxDone( void )
     if( DutyCycleOn == true )
     {
         Bands[Channels[Channel].Band].TimeOff = TxTimeOnAir * Bands[Channels[Channel].Band].DCycle - TxTimeOnAir;
+				printf("LoRaMac.c : OnRadioTxDone, TimeOff is : %" PRId64 "\n", Bands[Channels[Channel].Band].TimeOff);
     }
     else
     {
@@ -1574,9 +1584,10 @@ static void OnRadioRxError( void )
  * \param [IN] bandwidth window channel bandwidth
  * \param [IN] timeout window channel timeout
  */
-void LoRaMacRxWindowSetup( uint32_t freq, int8_t datarate, uint32_t bandwidth, uint16_t timeout )
+void LoRaMacRxWindowSetup( uint32_t freq, int8_t datarate, uint32_t bandwidth, uint16_t symbTimeout )
 {
-    if( Radio.Status( ) == RF_IDLE )
+		//printf("LoRaMac.c : LoRaMacRxWindowSetup, SETUP FIRST FENETRE\n");
+		if( Radio.Status( ) == RF_IDLE )
     {
         Radio.SetChannel( freq );
         if( datarate == DR_FSK )
@@ -1585,7 +1596,7 @@ void LoRaMacRxWindowSetup( uint32_t freq, int8_t datarate, uint32_t bandwidth, u
         }
         else
         {
-            Radio.SetRxConfig( MODEM_LORA, bandwidth, Datarates[datarate], 1, 0, 8, timeout, false, 0, false, 0, 0, true, false );
+            Radio.SetRxConfig( MODEM_LORA, bandwidth, Datarates[datarate], 1, 0, 8, symbTimeout, false, 0, false, 0, 0, true, false );
         }
         Radio.Rx( MaxRxWindow );
     }
@@ -1596,11 +1607,13 @@ void LoRaMacRxWindowSetup( uint32_t freq, int8_t datarate, uint32_t bandwidth, u
  */
 static void OnRxWindow1TimerEvent( void )
 {
+		printf("LoRaMac.c : OnRxWindow1TimerEvent, PREMIERE FENETRE\n");
     uint16_t symbTimeout = 5; // DR_SF10, DR_SF11, DR_SF12
     int8_t datarate = 0;
     uint32_t bandwidth = 0; // LoRa 125 kHz
 
     datarate = ChannelsDatarate - Rx1DrOffset;
+	
     if( datarate < 0 )
     {
         datarate = DR_SF12;
@@ -1652,6 +1665,7 @@ static void OnRxWindow2TimerEvent( void )
  */
 static void OnMacStateCheckTimerEvent( void )
 {
+	printf("LoRaMac.c : OnMacStateCheckTimerEvent\n");
     if( LoRaMacEventFlags.Bits.Tx == 1 )
     {
         if( NodeAckRequested == false )
@@ -1709,6 +1723,7 @@ static void OnMacStateCheckTimerEvent( void )
             if( ( AckTimeoutRetriesCounter < AckTimeoutRetries ) && ( AckTimeoutRetriesCounter <= MAX_ACK_RETRIES ) )
             {
                 AckTimeoutRetriesCounter++;
+								printf("OnMacStateCheckTimerEvent : AckTimeoutRetriesCounter %d\n", AckTimeoutRetriesCounter);
                 
                 if( ( AckTimeoutRetriesCounter % 2 ) == 1 )
                 {
@@ -1719,7 +1734,9 @@ static void OnMacStateCheckTimerEvent( void )
                 if( LoRaMacSetNextChannel( ) == 0 )
                 {
                     LoRaMacSendFrameOnChannel( Channels[Channel] );
-                }
+                }else{
+										printf("OnMacStateCheckTimerEvent : Warning cannot send on the next channel LoRaMacSetNextChannel does not return 0 \n");
+								}
             }
             else
             {

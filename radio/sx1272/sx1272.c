@@ -940,6 +940,7 @@ void SX1272SetTx( uint32_t timeout )
                                                   RFLR_IRQFLAGS_CADDETECTED );
                                               
                 // DIO0=TxDone, DIO2=FhssChangeChannel
+								//printf("sx1272 : SX1272SetTx read(REG_DIOMAPPING1 : %x\n ", SX1272Read( REG_DIOMAPPING1 ));
                 SX1272Write( REG_DIOMAPPING1, ( SX1272Read( REG_DIOMAPPING1 ) & RFLR_DIOMAPPING1_DIO0_MASK & RFLR_DIOMAPPING1_DIO2_MASK ) | RFLR_DIOMAPPING1_DIO0_01 | RFLR_DIOMAPPING1_DIO2_00 );
             }
             else
@@ -955,6 +956,7 @@ void SX1272SetTx( uint32_t timeout )
 
                 // DIO0=TxDone
                 SX1272Write( REG_DIOMAPPING1, ( SX1272Read( REG_DIOMAPPING1 ) & RFLR_DIOMAPPING1_DIO0_MASK ) | RFLR_DIOMAPPING1_DIO0_01 );
+								//printf("sx1272 : SX1272SetTx read REG_DIOMAPPING1 : %x\n ", SX1272Read( REG_DIOMAPPING1 ));
             }
         }
         break;
@@ -1084,7 +1086,7 @@ void SX1272SetModem( RadioModems_t modem )
     case MODEM_LORA:
         SX1272SetOpMode( RF_OPMODE_SLEEP );
         SX1272Write( REG_OPMODE, ( SX1272Read( REG_OPMODE ) & RFLR_OPMODE_LONGRANGEMODE_MASK ) | RFLR_OPMODE_LONGRANGEMODE_ON );
-
+				//printf("sx1272 : sx1272SetModem %x\n", REG_OPMODE);
         SX1272Write( REG_DIOMAPPING1, 0x00 );
         SX1272Write( REG_DIOMAPPING2, 0x00 );
         break;
@@ -1150,6 +1152,7 @@ void SX1272ReadFifo( uint8_t *buffer, uint8_t size )
 
 void SX1272OnTimeoutIrq( void )
 {
+	printf("sx1272 : SX1272OnTimeoutIrq : TIMEOUT RX OR TX\n");
     switch( SX1272.Settings.State )
     {
     case RF_RX_RUNNING:
@@ -1196,6 +1199,7 @@ void SX1272OnTimeoutIrq( void )
 
 void SX1272OnDio0Irq( void )
 {
+		printf("sx1272 : SX1272OnDio0Irq\n");
     __IO uint8_t irqFlags = 0;
 
     switch( SX1272.Settings.State )
@@ -1374,6 +1378,7 @@ void SX1272OnDio0Irq( void )
 
 void SX1272OnDio1Irq( void )
 {
+		printf("sx1272 : SX1272OnDio1Irq\n");
     switch( SX1272.Settings.State )
     {                
         case RF_RX_RUNNING:
@@ -1448,6 +1453,7 @@ void SX1272OnDio1Irq( void )
 
 void SX1272OnDio2Irq( void )
 {
+		printf("sx1272 : SX1272OnDio2Irq\n");
     switch( SX1272.Settings.State )
     {                
         case RF_RX_RUNNING:
@@ -1512,6 +1518,7 @@ void SX1272OnDio2Irq( void )
 
 void SX1272OnDio3Irq( void )
 {
+		printf("sx1272 : SX1272OnDio3Irq\n");
     switch( SX1272.Settings.Modem )
     {
     case MODEM_FSK:
@@ -1543,6 +1550,7 @@ void SX1272OnDio3Irq( void )
 
 void SX1272OnDio4Irq( void )
 {
+		//printf("sx1272 : SX1272OnDio4Irq\n");
     switch( SX1272.Settings.Modem )
     {
     case MODEM_FSK:
@@ -1562,6 +1570,7 @@ void SX1272OnDio4Irq( void )
 
 void SX1272OnDio5Irq( void )
 {
+		printf("sx1272 : SX1272OnDio5Irq\n");
     switch( SX1272.Settings.Modem )
     {
     case MODEM_FSK:

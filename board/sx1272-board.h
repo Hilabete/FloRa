@@ -15,6 +15,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #ifndef __SX1272_ARCH_H__
 #define __SX1272_ARCH_H__
 
+void testPCO( void );
 /*!
  * \brief Radio hardware registers initialization definition
  *

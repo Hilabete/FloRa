@@ -367,7 +367,7 @@
             <v6LangP>0</v6LangP>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_BAND_868, LOW_POWER_MODE_ENABLE, FLORA_BOARD</Define>
+              <Define>USE_BAND_868, LOW_POWER_MODE_ENABLE, FLORA_BOARD, USE_STM32L152_EVAL</Define>
               <Undefine></Undefine>
               <IncludePath>.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\STM32L1xx_StdPeriph_Driver\inc;.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\CMSIS\Include;.\STM32L1xx_StdPeriph_Lib_V1.3.1\Libraries\CMSIS\Device\ST\STM32L1xx\Include;.\includes;.\STM32_EVAL\Common;.\STM32_EVAL\STM32L152_EVAL;.\mac;.\board;.\radio;.\radio\sx1272;.\utils;.\system;.\system\crypto</IncludePath>
             </VariousControls>

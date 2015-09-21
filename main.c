@@ -27,6 +27,11 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define RF_FREQUENCY																868000000	//Hz
 
 /*!
+ * Number of retries for confirmed messages
+ */
+#define ACK_RETRIES 																3
+	
+/*!
  * Mote device IEEE EUI given by Actility
  */
 static uint8_t DevEui[] =
@@ -101,7 +106,7 @@ static bool IsNetworkJoined = false;
 /*!
  * Defines the application data transmission duty cycle
  */
-#define APP_TX_DUTYCYCLE                            5000000  // 5 [s] value in us
+#define APP_TX_DUTYCYCLE                            10000000  // 5 [s] value in us
 #define APP_TX_DUTYCYCLE_RND                        1000000  // 1 [s] value in us
 
 /*!
@@ -199,8 +204,8 @@ static bool SendFrame( void )
 		printf("SendFrame(void) \n");
     uint8_t sendFrameStatus = 0;
 
-    sendFrameStatus = LoRaMacSendFrame( AppPort, AppData, AppDataSize );
-    //sendFrameStatus = LoRaMacSendConfirmedFrame( AppPort, AppData, AppDataSize, 8 );
+    //sendFrameStatus = LoRaMacSendFrame( AppPort, AppData, AppDataSize );
+    sendFrameStatus = LoRaMacSendConfirmedFrame( AppPort, AppData, AppDataSize, ACK_RETRIES );
 	
 		printf("SendFrame result : %d\n", sendFrameStatus);
     switch( sendFrameStatus )
@@ -336,10 +341,9 @@ int main( void )
     TimerInit( &Led2Timer, OnLed2TimerEvent );
     TimerSetValue( &Led2Timer, 25000 );
 
-    LoRaMacSetAdrOn( true );
-
     while( 1 )
     {
+			///*
         while( IsNetworkJoined == false )
         {
 #if( OVER_THE_AIR_ACTIVATION != 0 )
@@ -393,6 +397,6 @@ int main( void )
 
             trySendingFrameAgain = SendFrame( );
         }
-        //TimerLowPowerHandler( );
+        //TimerLowPowerHandler( );//*/
     }
 	}

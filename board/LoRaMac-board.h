@@ -18,7 +18,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 /*!
  * LoRaMac maximum number of channels
  */
-#define LORA_MAX_NB_CHANNELS                        16
+#define LORA_MAX_NB_CHANNELS                        3
 
 /*!
  * Minimal datarate that can be used by the node
@@ -28,12 +28,18 @@ Maintainer: Miguel Luis and Gregory Cristian
 /*!
  * Minimal datarate that can be used by the node
  */
-#define LORAMAC_MAX_DATARATE                        DR_FSK
+#define LORAMAC_MAX_DATARATE                        DR_SF7
 
 /*!
  * Default datarate used by the node
  */
 #define LORAMAC_DEFAULT_DATARATE                    DR_SF12
+
+/*!
+ * LoRaMac ADR (Adaptative Data Rate) control status
+ */
+#define ADR_CTRL                    								true
+
 
 /*!
  * Minimal Tx output power that can be used by the node
@@ -110,9 +116,9 @@ typedef enum
 
 // Band = { DutyCycle, TxMaxPower, LastTxDoneTime, TimeOff }
 #define BAND0              { 100 , TX_POWER_14_DBM, 0,  0 } //  1.0 %
-#define BAND1              { 100 , TX_POWER_14_DBM, 0,  0 } //  1.0 %
+#define BAND1              { 10  , TX_POWER_14_DBM, 0,  0 } //  10.0 % // Fluxon : 10%
 #define BAND2              { 1000, TX_POWER_14_DBM, 0,  0 } //  0.1 %
-#define BAND3              { 10  , TX_POWER_14_DBM, 0,  0 } // 10.0 %
+#define BAND3              { 10  , TX_POWER_14_DBM, 0,  0 } //  10.0 %
 #define BAND4              { 100 , TX_POWER_14_DBM, 0,  0 } //  1.0 %
 
 /*!

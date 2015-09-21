@@ -118,8 +118,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define RADIO_DIO_1                                 PC_1 	//PB_10
 #define RADIO_DIO_2                                 PC_2	//PB_11
 #define RADIO_DIO_3                                 PC_3	//PB_7	
-#define RADIO_DIO_4                                 PA_0	//PB_5
-#define RADIO_DIO_5                                 PA_1	//PB_4
+#define RADIO_DIO_4                                 PC_7	//PB_5
+#define RADIO_DIO_5                                 PC_8	//PB_4
 
 #ifdef FLORA_BOARD
 	#define RADIO_ANT_SWITCH                         	PA_4 //PE4259 selector
@@ -133,6 +133,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 
 #define OSC_HSE_IN                                  PH_0
 #define OSC_HSE_OUT                                 PH_1
+
+#define TEST_INTERUPT                               PC_9
 
 //#define USB_DM                                      PA_11
 //#define USB_DP                                      PA_12
@@ -153,7 +155,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 //#define CON_EXT_9                                   PA_1     
 //#define BAT_LEVEL                                   PA_3
 
-#define BOOT_1                                      PB_2
+//#define BOOT_1                                      PB_2
 //    
 //#define GPS_PPS                                     PA_8
 //#define UART_TX                                     PA_9
@@ -180,8 +182,13 @@ Maintainer: Miguel Luis and Gregory Cristian
 //extern Gpio_t TxEnSX9500;
 extern Gpio_t Led1;
 extern Gpio_t Led2;
+extern Gpio_t testInterupt;
 //extern Gpio_t Led3;
 
+/*!
+ * Hardware IO IRQ callback function definition
+ */
+typedef void ( TestIrqHandler )( void );
 
 ///*!
 // * Debug GPIO pins objects
@@ -231,5 +238,8 @@ void BoardDeInitMcu( void );
 void BoardGetUniqueId( uint8_t *id );
 
 uint8_t BoardMeasureBatterieLevel( void );
+
+// fonction appelée pour tester les interupts
+void onTestInterupt( void );
 
 #endif // __BOARD_H__

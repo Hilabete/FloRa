@@ -28,24 +28,24 @@ Maintainer: Miguel Luis and Gregory Cristian
     #warning Not supported compiler type
 #endif
 /*!
- * Beacon interval in ms
+ * Beacon interval in us
  */
 #define BEACON_INTERVAL                             128000000
 
 /*!
- * Class A&B receive delay in ms
+ * Class A&B receive delay in us
  */
 #define RECEIVE_DELAY1                              1000000
 #define RECEIVE_DELAY2                              2000000
 
 /*!
- * Join accept receive delay in ms
+ * Join accept receive delay in us
  */
 #define JOIN_ACCEPT_DELAY1                          5000000
 #define JOIN_ACCEPT_DELAY2                          6000000
 
 /*!
- * Class A&B maximum receive window delay in ms
+ * Class A&B maximum receive window delay in us
  */
 #define MAX_RX_WINDOW                               3000000
 
@@ -86,7 +86,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 /*!
  * Maximum number of times the MAC layer tries to get an acknowledge.
  */
-#define MAX_ACK_RETRIES                             8
+#define MAX_ACK_RETRIES                             3
 
 /*!
  * RSSI free threshold

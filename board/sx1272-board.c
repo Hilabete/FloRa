@@ -17,6 +17,18 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "sx1272/sx1272.h"
 #include "sx1272-board.h"
 
+TestIrqHandler *testIrqPCO[] = { testPCO };
+void testPCO( void )
+{
+	printf("----------------\n");
+	printf("ON_TEST_INTERUPT\n");
+	printf("----------------\n");
+	if(GpioRead( &Led2 ) == 0){
+		GpioWrite( &Led2, 1 );
+	}else{
+		GpioWrite( &Led2, 0 );
+	}	
+}
 /*!
  * Flag used to set the RF switch control pins in low power mode when the radio is not active.
  */
@@ -74,11 +86,13 @@ void SX1272IoInit( void )
 void SX1272IoIrqInit( DioIrqHandler **irqHandlers )
 {
     GpioSetInterrupt( &SX1272.DIO0, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[0] );
-    GpioSetInterrupt( &SX1272.DIO1, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[1] );
+		GpioSetInterrupt( &SX1272.DIO1, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[1] );
     GpioSetInterrupt( &SX1272.DIO2, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[2] );
     GpioSetInterrupt( &SX1272.DIO3, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[3] );
+		///*
     GpioSetInterrupt( &SX1272.DIO4, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[4] );
     GpioSetInterrupt( &SX1272.DIO5, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[5] );
+		//*/
 }
 
 void SX1272IoDeInit( void )
@@ -103,7 +117,7 @@ void SX1272SetAntSwLowPower( bool status )
     if( RadioIsActive != status )
     {
         RadioIsActive = status;
-    
+
         if( status == false )
         {
             SX1272AntSwInit( );
@@ -148,6 +162,7 @@ void SX1272SetAntSw( uint8_t rxTx )
     if( rxTx != 0 ) // 1: TX, 0: RX
     {
 			#ifdef FLORA_BOARD
+				printf("sx1272 : SX1272SetAntSw TX_MODE\n");
 				GpioWrite( &AntSw, 1 );
 			#else
 				GpioWrite( &AntRx, 0 );
@@ -157,6 +172,7 @@ void SX1272SetAntSw( uint8_t rxTx )
     else
     {
 			#ifdef FLORA_BOARD
+				printf("sx1272 : SX1272SetAntSw RX_MODE\n");
 				GpioWrite( &AntSw, 0 );
 			#else
 				GpioWrite( &AntRx, 1 );
